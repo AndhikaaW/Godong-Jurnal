@@ -10,9 +10,15 @@ import { AppMenuItem } from '@/types';
 import axios from 'axios';
 import { apiEndpoints } from '@/app/api/api';
 
+interface sidebar{
+    sidebar_id: number,
+    label: string,
+    to_path: string,
+    icon:string; 
+}
 const AppMenu = () => {
     const { layoutConfig } = useContext(LayoutContext);
-    const [sidebar, setSidebar] = useState<any[]>([]);
+    const [sidebar, setSidebar] = useState<sidebar[]>([]);
     useEffect(() => {
         axios
           .get(apiEndpoints.getsidebar)
@@ -37,7 +43,7 @@ const AppMenu = () => {
                     style={{ width: '15px', height: '15px' }}
                 />
             ) : 'pi pi-fw pi-file',
-            to: item.to || item.to_path
+            to: item.to_path
         }]
     }));
 
