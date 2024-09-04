@@ -8,30 +8,22 @@ import { MenuProvider } from './context/menucontext';
 import Link from 'next/link';
 import { AppMenuItem } from '@/types';
 import axios from 'axios';
+import { apiEndpoints } from '@/app/api/api';
 
 const AppMenu = () => {
     const { layoutConfig } = useContext(LayoutContext);
     const [sidebar, setSidebar] = useState<any[]>([]);
     useEffect(() => {
-        const fetchSifatKredit = async () => {
-            try {
-                const response = await axios.get('http://192.168.1.35:8000/api/getsidebar');
-                setSidebar(response.data);
-            } catch (error) {
-                console.error('There was an error fetching the users!', error);
-            } finally {
-                // setIsLoading(false);
-            }
-        };
-        fetchSifatKredit();
-    }, []);
-
-    // const model: AppMenuItem[] = [
-    //     {
-    //         label: 'Home',
-    //         items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
-    //     },
-    // ];
+        axios
+          .get(apiEndpoints.getsidebar)
+          .then((response) => {
+            setSidebar(response.data);
+            console.log(response.data);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }, []);
     console.log(sidebar)
     const model: AppMenuItem[] = sidebar.map((item):any => ({
         label: item.label,
