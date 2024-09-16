@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\MenuProductController;
 use App\Http\Controllers\SidebarController;
+use App\Models\MenuProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,3 +22,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/getsidebar', [SidebarController::class, 'getSidebar']);
+Route::get('/getproducts', [MenuProductController::class, 'index']);
