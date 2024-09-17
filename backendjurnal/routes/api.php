@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\MenuProductController;
 use App\Http\Controllers\SidebarController;
 use App\Models\MenuProduct;
@@ -23,3 +24,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/getsidebar', [SidebarController::class, 'getSidebar']);
 Route::get('/getproducts', [MenuProductController::class, 'index']);
+Route::get('/getViewMaster', [ContactController::class, 'viewMasterKontak']);
