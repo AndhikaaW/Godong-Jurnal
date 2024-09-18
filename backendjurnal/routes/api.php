@@ -25,3 +25,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/getsidebar', [SidebarController::class, 'getSidebar']);
 Route::get('/getproducts', [MenuProductController::class, 'index']);
 Route::get('/getViewMaster', [ContactController::class, 'viewMasterKontak']);
+Route::get('/getJenisKontak', [ContactController::class, 'viewJenisKontak']);
+Route::post('/input-data-kontak', [ContactController::class, 'inputDataContact']);

@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,4 +9,9 @@ class GrubKontak extends Model
     protected $table = "grup_kontak";
     public $timestamps = false;
     protected $fillable = ['id','kode','nama'];
+
+    public function dataContacts()
+    {
+        return $this->hasMany(DataContact::class, 'grup_kontak', 'kode');
+    }
 }

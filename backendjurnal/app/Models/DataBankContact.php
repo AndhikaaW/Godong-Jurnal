@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,4 +17,14 @@ class DataBankContact extends Model
     ];
     public $timestamps = false;
     use HasFactory;
+
+    public function dataContact()
+    {
+        return $this->belongsTo(DataContact::class, 'kode_kontak', 'kode');
+    }
+
+    public function masterNamaBank()
+    {
+        return $this->belongsTo(MasterNamaBank::class, 'nama_bank', 'kode');
+    }
 }
