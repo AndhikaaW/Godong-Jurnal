@@ -10,8 +10,8 @@ class GrubKontak extends Model
     public $timestamps = false;
     protected $fillable = ['id','kode','nama'];
 
-    public function dataContacts()
+    public function dataGrub()
     {
-        return $this->hasMany(DataContact::class, 'grup_kontak', 'kode');
+        return $this->hasMany(DataGrubKontak::class, 'kode_grub', 'kode');
     }
 }

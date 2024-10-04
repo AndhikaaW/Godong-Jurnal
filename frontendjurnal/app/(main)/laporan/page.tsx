@@ -42,7 +42,11 @@ const Laporan: React.FC = () => {
 
     useEffect(() => {
         axios
-            .get(apiEndpoints.getLaporan)
+            .get(apiEndpoints.getLaporan, {
+                headers: {
+                    'ngrok-skip-browser-warning': 'true',  // Add this header
+                },
+            })
             .then((response) => {
                 setLaporan(response.data);
             })

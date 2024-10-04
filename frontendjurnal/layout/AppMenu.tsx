@@ -21,7 +21,11 @@ const AppMenu = () => {
     const [sidebar, setSidebar] = useState<sidebar[]>([]);
     useEffect(() => {
         axios
-          .get(apiEndpoints.getsidebar)
+        .get(apiEndpoints.getsidebar, {
+            headers: {
+                'ngrok-skip-browser-warning': 'true',  // Add this header
+            },
+        })
           .then((response) => {
             setSidebar(response.data);
             console.log(response.data);

@@ -12,8 +12,6 @@ class DataContact extends Model
         'id',
         'kode',
         'nama_tampilan',
-        'tipe_kontak',
-        'grup_kontak',
         'nama_lengkap',
         'sebutan',
         'identitas',
@@ -26,6 +24,8 @@ class DataContact extends Model
         'npwp',
         'alamat_penagihan',
         'alamat_pengiriman',
+        'info_lainnya',
+        'hutang_max',
         'akun_piutang',
         'akun_hutang',
         'syarat_pembayaran_utama',
@@ -35,12 +35,14 @@ class DataContact extends Model
     {
         return $this->hasMany(DataBankContact::class, 'kode_kontak', 'kode');
     }
-
-    public function grupKontak()
+    public function dataGrubContacts()
     {
-        return $this->belongsTo(GrubKontak::class, 'grup_kontak', 'kode');
+        return $this->hasMany(DataGrubKontak::class, 'kode_kontak', 'kode');
     }
-
+    public function dataTipeKontak()
+    {
+        return $this->hasMany(DataTipeKontak::class, 'kode_kontak', 'kode');
+    }
     public function sebutanKontak()
     {
         return $this->belongsTo(SebutanKontak::class, 'sebutan', 'kode');
