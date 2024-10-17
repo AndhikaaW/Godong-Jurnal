@@ -17,6 +17,6 @@ class DataGrubKontak extends Model
     }
     public function grupKontak()
     {
-        return $this->belongsTo(GrubKontak::class, 'kode', 'kode_grub');
+        return $this->belongsTo(GrubKontak::class, 'kode_grub', 'kode');
     }
 }

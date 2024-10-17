@@ -41,10 +41,18 @@ class ContactController extends Controller
 
     public function viewSingleDataContact($kode)
     {
-        $dataContact = DataContact::with(['dataTipeKontak.masterContact'])
-            ->where('kode', $kode)
-            ->firstOrFail();
-
+        $dataContact = DataContact::with([
+            'dataTipeKontak.masterContact',
+            'dataGrubContacts.grupKontak',
+            'dataBankContacts.masterNamaBank',
+            'sebutanKontak',
+            'identitasKontak',
+            'akunPiutang',
+            'akunHutang'
+        ])
+        ->where('kode', $kode)
+        ->firstOrFail();
+    
         return response()->json($dataContact);
     }
     public function viewGrubKontak()

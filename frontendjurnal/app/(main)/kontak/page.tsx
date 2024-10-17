@@ -15,6 +15,9 @@ import { SelectButton } from 'primereact/selectbutton';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { MultiSelect } from 'primereact/multiselect';
 import GrupKontakDialog from '@/app/Components/GrupKontakDialog';
+import { Sidebar } from 'primereact/sidebar';
+import { Checkbox } from 'primereact/checkbox';
+import { AutoComplete, AutoCompleteCompleteEvent } from 'primereact/autocomplete';
 
 interface DataContact {
     id: number;
@@ -65,6 +68,13 @@ const Kontak: React.FC = () => {
     const searchParams = useSearchParams();
     const toast = useRef<Toast>(null);
     const tabColors = ['#FF5722', '#4CAF50', '#2196F3', '#9C27B0', '#FFEB3B'];
+    const [sidebarVisible, setSidebarVisible] = useState(false);
+    const [filterKeyword, setFilterKeyword] = useState('');
+    const [filterGroup, setFilterGroup] = useState('');
+    const [filterPhone, setFilterPhone] = useState('');
+    const [filterEmail, setFilterEmail] = useState('');
+    const [showArchivedContacts, setShowArchivedContacts] = useState(false);
+    const [groupSuggestions, setGroupSuggestions] = useState<string[]>([]);
 
     const paymentOptions = [
         { label: 'Harus Anda Bayar', value: 'bayar' },
@@ -91,6 +101,16 @@ const Kontak: React.FC = () => {
         { field: 'info_lainnya', header: 'Info lainnya' },
         { field: 'saldo', header: 'Saldo' }
     ];
+
+    const groups = ['Pelanggan', 'Pemasok', 'Karyawan', 'Lainnya'];
+
+    const suggestGroups = (event: AutoCompleteCompleteEvent) => {
+        const query = event.query.toLowerCase();
+        const filteredGroups = groups.filter(group => 
+            group.toLowerCase().includes(query)
+        );
+        setGroupSuggestions(filteredGroups);
+    };
 
     useEffect(() => {
         const status = searchParams.get('status');
@@ -175,6 +195,54 @@ const Kontak: React.FC = () => {
         setSelectedColumns(orderedSelectedColumns);
     };
 
+    const filterSidebar = (
+        <Sidebar visible={sidebarVisible} onHide={() => setSidebarVisible(false)} position="right" className="p-sidebar-sm">
+            <h2 className="text-xl font-bold mb-4">Filter daftar kontak</h2>
+            <div className="flex flex-column gap-4">
+                <div className="flex flex-column gap-2">
+                    <label htmlFor="keyword" className="font-semibold">Kata kunci</label>
+                    <InputText id="keyword" value={filterKeyword} onChange={(e) => setFilterKeyword(e.target.value)} placeholder="Cari kontak" />
+                </div>
+                <div className="flex flex-column gap-2">
+                    <label htmlFor="group" className="font-semibold">Grup</label>
+                    <AutoComplete
+                        id="group"
+                        value={filterGroup}
+                        suggestions={groupSuggestions}
+                        completeMethod={suggestGroups}
+                        onChange={(e) => setFilterGroup(e.value)}
+                        dropdown
+                    />
+                </div>
+                <div className="flex flex-column gap-2">
+                    <label htmlFor="phone" className="font-semibold">Nomor telepon</label>
+                    <InputText id="phone" value={filterPhone} onChange={(e) => setFilterPhone(e.target.value)} placeholder="Contoh: 012 3456789" />
+                </div>
+                <div className="flex flex-column gap-2">
+                    <label htmlFor="email" className="font-semibold">Email</label>
+                    <InputText id="email" value={filterEmail} onChange={(e) => setFilterEmail(e.target.value)} />
+                </div>
+                <div className="flex align-items-center gap-2">
+                    <Checkbox inputId="archived" checked={showArchivedContacts} onChange={(e) => setShowArchivedContacts(e.checked ?? false)} />
+                    <label htmlFor="archived" className="ml-2">Tampilkan kontak yang diarsipkan</label>
+                </div>
+                <div className="flex justify-content-between mt-4">
+                    <Button label="Atur ulang" className="p-button-text" onClick={() => {
+                        setFilterKeyword('');
+                        setFilterGroup('');
+                        setFilterPhone('');
+                        setFilterEmail('');
+                        setShowArchivedContacts(false);
+                    }} />
+                    <Button label="Terapkan" className="p-button-success" onClick={() => {
+                        // Implementasikan logika filter di sini
+                        setSidebarVisible(false);
+                    }} />
+                </div>
+            </div>
+        </Sidebar>
+    );
+
     const header = (
         <div className="flex flex-column">
             <div className="grid">
@@ -195,7 +263,7 @@ const Kontak: React.FC = () => {
                         </span>
                         <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} chooseLabel="Impor" className="mr-2" />
                         <Button label="Expor" className="p-button-success mr-2" />
-                        <Button label="Filter" className="p-button-success" icon="pi pi-filter" />
+                        <Button label="Filter" className="p-button-success" icon="pi pi-filter" onClick={() => setSidebarVisible(true)} />
                     </div>
                 </div>
             </div>
@@ -306,6 +374,7 @@ const Kontak: React.FC = () => {
                     </DataTable>
                 </TabPanel>
             </TabView>
+            {filterSidebar}
         </div>
     );
 };

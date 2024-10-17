@@ -33,7 +33,11 @@ export default function ContactGroupManagement() {
     const fetchGroups = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(apiEndpoints.getGrubKontak);
+            const response = await axios.get(apiEndpoints.getGrubKontak, {
+                headers: {
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            });
             setGroups(response.data.map((group: any) => ({
                 ...group,
                 jumlah_kontak: group.jumlah_kontak || 0
@@ -68,7 +72,11 @@ export default function ContactGroupManagement() {
         }
         setLoading(true);
         try {
-            const response = await axios.post(apiEndpoints.inputGrupContact, { nama: newGroupName });
+            const response = await axios.post(apiEndpoints.inputGrupContact, { nama: newGroupName }, {
+                headers: {
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            });
             
             // Ensure the new group data has the same format as existing data
             const newGroup: ContactGroup = {

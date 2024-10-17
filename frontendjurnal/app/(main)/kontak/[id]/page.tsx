@@ -4,6 +4,11 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { apiEndpoints } from '@/app/api/api';
 import { Button } from 'primereact/button';
+import { Card } from 'primereact/card';
+import { TabView, TabPanel } from 'primereact/tabview';
+import { Tag } from 'primereact/tag';
+import { Chip } from 'primereact/chip';
+import { Divider } from 'primereact/divider';
 
 interface ContactDetail {
   id: number;
@@ -26,8 +31,34 @@ interface ContactDetail {
       nama: string;
     };
   }>;
-  akun_piutang: number;
-  akun_hutang: number;
+  data_grub_contacts: Array<{
+    grup_kontak: {
+      nama: string;
+    };
+  }>;
+  data_bank_contacts: Array<{
+    nama_bank: string;
+    cabang_bank: string;
+    pemegang_akun_bank: string;
+    nomor_rekening: string;
+    master_nama_bank: {
+      nama_bank: string;
+    };
+  }>;
+  sebutan_kontak: {
+    name: string;
+  };
+  identitas_kontak: {
+    name: string;
+  };
+  akun_piutang: {
+    kode:number;
+    nama:string;
+  };
+  akun_hutang: {
+    kode:number;
+    nama:string;
+  }
   hutang_max: number;
   syarat_pembayaran_utama: string;
 }
@@ -53,81 +84,129 @@ const ContactDetailPage: React.FC = () => {
     }
   }, []);
 
+  const getTypeSeverity = (type: string) => {
+    switch (type) {
+      case 'Pelanggan':
+        return 'warning';
+      case 'Supplier':
+        return 'info';
+      case 'Karyawan':
+        return 'success';
+      case 'Lainnya':
+        return 'help';
+      default:
+        return 'secondary';
+    }
+  };
+
   if (!contact) {
     return <div>Loading...</div>;
   }
 
+  const renderInfoTable = (data: { [key: string]: string }) => (
+    <div className="p-2">
+      {Object.entries(data).map(([key, value]) => (
+        <div key={key} className="flex py-2 border-bottom-1 surface-border">
+          <div className="w-6 font-medium">{key}</div>
+          <div className="w-6">{value}</div>
+        </div>
+      ))}
+    </div>
+  );
+
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Informasi kontak</h1>
-      <div className="flex mb-4">
-        <div className="mr-2">Profil</div>
-        <div>Transaksi</div>
-      </div>
-      <div className="mb-4">
-        <h2 className="text-xl font-semibold">TI</h2>
-        <div className="flex space-x-2">
-          {contact.data_tipe_kontak.map((type, index) => (
-            <span key={index} className="px-2 py-1 bg-blue-100 rounded-full text-sm">
-              {type.master_contact.nama}
-            </span>
-          ))}
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <h3 className="font-semibold mb-2">Informasi umum</h3>
-          <table className="w-full">
-            <tbody>
-              <tr><td>Nama kontak</td><td>{contact.nama_lengkap}</td></tr>
-              <tr><td>Nama Perusahaan</td><td>{contact.nama_perusahaan}</td></tr>
-              <tr><td>Email</td><td>{contact.email}</td></tr>
-              <tr><td>Nomor handphone</td><td>{contact.no_handphone}</td></tr>
-              <tr><td>Nomor telepon</td><td>{contact.no_telepon}</td></tr>
-              <tr><td>Fax</td><td>{contact.no_fax}</td></tr>
-              <tr><td>NPWP</td><td>{contact.npwp}</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div>
-          <table className="w-full">
-            <tbody>
-              <tr><td>Identitas</td><td>{contact.identitas}</td></tr>
-              <tr><td>Nomor identitas</td><td>{contact.nomor_identitas}</td></tr>
-              <tr><td>Alamat penagihan</td><td>{contact.alamat_penagihan}</td></tr>
-              <tr><td>Alamat pengiriman</td><td>{contact.alamat_pengiriman}</td></tr>
-              <tr><td>Info lainnya</td><td>{contact.info_lainnya}</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div className="mt-4">
-        <h3 className="font-semibold mb-2">Info bank</h3>
-        <table className="w-full">
-          <tbody>
-            <tr><td>Nama bank</td><td>BCA Personal</td></tr>
-            <tr><td>Kantor cabang bank</td><td>Madiun</td></tr>
-            <tr><td>Nomor rekening</td><td>213132132123213</td></tr>
-            <tr><td>Pemegang akun bank</td><td>Sri</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div className="mt-4">
-        <h3 className="font-semibold mb-2">Pemetaan akun</h3>
-        <table className="w-full">
-          <tbody>
-            <tr><td>Akun hutang</td><td>{`(2-20100) Hutang Usaha`}</td></tr>
-            <tr><td>Akun piutang</td><td>{`(1-10100) Piutang Usaha`}</td></tr>
-            <tr><td>Hutang maksimum</td><td>{`Rp${contact.hutang_max.toLocaleString()},00`}</td></tr>
-            <tr><td>Syarat pembayaran utama</td><td>{contact.syarat_pembayaran_utama}</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <Button 
-        className="mt-4 p-button-primary"
-        onClick={() => router.back()}
-        label="Kembali"
-      />
+    <div className="card">
+      <h1 className="text-3xl font-bold mb-4">Informasi kontak</h1>
+      <TabView>
+        <TabPanel header="Profil">
+          <Card className="mb-4">
+            <div className="flex align-items-center justify-content-between flex-wrap">
+              <h2 className="text-xl font-semibold">{contact.nama_tampilan}</h2>
+              <div className="flex flex-wrap gap-1">
+                {contact.data_tipe_kontak.map((type, index) => (
+                  <Tag 
+                    key={index} 
+                    value={type.master_contact.nama}
+                    style={{height:"20px"}} 
+                    severity={getTypeSeverity(type.master_contact.nama) as "warning" | "info" | "success" | "danger" | null | undefined}
+                  />
+                ))}
+                <Divider layout="vertical"/>
+                {contact.data_grub_contacts.map((group, index) => (
+                  <Chip 
+                    key={index} 
+                    style={{height:"20px"}}
+                    label={group.grup_kontak.nama} 
+                    className="bg-primary text-white"
+                  />
+                ))}
+              </div>
+            </div>
+          </Card>
+          
+          <div className="grid">
+            <div className="col-12 md:col-6">
+              <Card title="Informasi umum" className="h-full">
+                {renderInfoTable({
+                  'Nama kontak': contact.nama_lengkap,
+                  'Nama Perusahaan': contact.nama_perusahaan,
+                  'Email': contact.email,
+                  'Nomor handphone': contact.no_handphone,
+                  'Nomor telepon': contact.no_telepon,
+                  'Fax': contact.no_fax,
+                  'NPWP': contact.npwp,
+                  'Sebutan': contact.sebutan_kontak?.name || '-',
+                  'Identitas': contact.identitas_kontak?.name || '-'
+                })}
+              </Card>
+            </div>
+            <div className="col-12 md:col-6">
+              <Card title="Informasi tambahan" className="h-full">
+                {renderInfoTable({
+                  'Identitas': contact.identitas,
+                  'Nomor identitas': contact.nomor_identitas,
+                  'Alamat penagihan': contact.alamat_penagihan,
+                  'Alamat pengiriman': contact.alamat_pengiriman,
+                  'Info lainnya': contact.info_lainnya
+                })}
+              </Card>
+            </div>
+          </div>
+
+          <Card title="Info bank" className="mt-4">
+            {contact.data_bank_contacts.map((bank, index) => (
+              <div key={index} className="mb-3">
+                <h3 className="font-semibold mb-2">Bank {index + 1}</h3>
+                {renderInfoTable({
+                  'Nama bank': bank.master_nama_bank.nama_bank,
+                  'Kantor cabang bank': bank.cabang_bank,
+                  'Nomor rekening': bank.nomor_rekening,
+                  'Pemegang akun bank': bank.pemegang_akun_bank
+                })}
+              </div>
+            ))}
+          </Card>
+
+          <Card title="Pemetaan akun" className="mt-4">
+            {renderInfoTable({
+              'Akun hutang': `(${contact.akun_hutang.kode}) ${contact.akun_hutang.nama}`,
+              'Akun piutang': `(${contact.akun_piutang.kode}) ${contact.akun_piutang.nama}`,
+              'Hutang maksimum': `Rp${contact.hutang_max.toLocaleString()},00`,
+              'Syarat pembayaran utama': contact.syarat_pembayaran_utama
+            })}
+          </Card>
+
+          <Button 
+            label="Kembali" 
+            icon="pi pi-arrow-left" 
+            className="mt-4"
+            onClick={() => router.back()}
+          />
+        </TabPanel>
+        <TabPanel header="Transaksi">
+          <p>Konten transaksi akan ditampilkan di sini.</p>
+        </TabPanel>
+      </TabView>
     </div>
   );
 };
