@@ -1,6 +1,6 @@
+// const baseUrlApi = `http://10.208.226.149:8001/api`;    
 const baseUrlApi = `http://192.168.200.98:8000/api`;    
-// const baseUrlApi = `http://192.168.1.38:8000/api`;    
-// const baseUrlApi = `https://b5cb-125-164-232-77.ngrok-free.app/api`;
+// const baseUrlApi = `https://99b2-36-88-34-74.ngrok-free.app/api`;
 
 export const apiEndpoints = {
   //sidebar

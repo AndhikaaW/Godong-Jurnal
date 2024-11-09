@@ -35,21 +35,88 @@ const AppMenu = () => {
           });
       }, []);
     console.log(sidebar)
-    const model: AppMenuItem[] = sidebar.map((item):any => ({
-        label: item.label,
-        items: [{
-            label: item.label,
-            // icon: `data:image/jpeg;base64,${item.icon}`,
-            icon: item.icon ? (
-                <img
-                    src={`data:image/svg+xml;base64,${item.icon}`} 
-                    alt={item.label}
-                    style={{ width: '15px', height: '15px' }}
-                />
-            ) : 'pi pi-fw pi-file',
-            to: item.to_path
-        }]
-    }));
+    const model: AppMenuItem[] = sidebar.map((item, index):any => {
+        // Tambahkan submenu khusus untuk menu Penjualan
+        if (item.label.toLowerCase() === 'penjualan') {
+            return {
+                items: [{
+                    label: item.label,
+                    icon: item.icon ? (
+                        <img
+                            src={`data:image/svg+xml;base64,${item.icon}`} 
+                            alt={item.label}
+                            style={{ width: '15px', height: '15px' }}
+                        />
+                    ) : 'pi pi-fw pi-file',
+                    items: [
+                        {
+                            label: 'Dashboard Penjualan',
+                            to: '/penjualan'
+                        },
+                        {
+                            label: 'Add Deposit',
+                            to: '/penjualan/addDeposit'
+                        },
+                        {
+                            label: 'Add Penagihan Penjualan',
+                            to: '/penjualan/addPenagihanPenjualan'
+                        },
+                        {
+                            label: 'Add Penawaran Penjualan',
+                            to: '/penjualan/addPenawaranPenjualan'
+                        },
+                        {
+                            label: 'Add Pemesanan Penjualan',
+                            to: '/penjualan/addPemesananPenjualan'
+                        },
+                        {
+                            label: 'Add Terima Pembayaran',
+                            to: '/penjualan/addTerimaPembayaran'
+                        },
+                        {
+                            label: 'Add Return Penjualan',
+                            to: '/penjualan/addReturnPenjualan'
+                        },
+                        {
+                            label: 'Penagihan Penjualan',
+                            to: '/penjualan/penagihanPenjualan'
+                        },
+                        {
+                            label: 'Pengiriman Penjualan',
+                            to: '/penjualan/pengirimanPenjualan'
+                        },
+                        {
+                            label: 'Terima Pembayaran',
+                            to: '/penjualan/terimaPembayaran'
+                        },
+                        {
+                            label: 'Faktur Proforma',
+                            to: '/penjualan/fakturProforma'
+                        },
+                        {
+                            label: 'Tukar Faktur Penjualan',
+                            to: '/penjualan/tukarFakturPenjualan'
+                        }
+                    ]
+                }],
+            };
+        }
+
+        // Return normal menu item untuk menu lainnya
+        return {
+            items: [{
+                label: item.label,
+                icon: item.icon ? (
+                    <img
+                        src={`data:image/svg+xml;base64,${item.icon}`} 
+                        alt={item.label}
+                        style={{ width: '15px', height: '15px' }}
+                    />
+                ) : 'pi pi-fw pi-file',
+                to: item.to_path
+            }],
+        };
+    });
 
     return (
         <MenuProvider>
