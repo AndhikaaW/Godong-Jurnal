@@ -46,12 +46,14 @@ Langkah-langkah untuk mengatur backend menggunakan Laravel:
 3. Jalankan perintah berikut untuk memuat ulang autoloader:  
    ```bash
    composer dump-autoload
-   ```  
-4. Generate kunci aplikasi:
+   ```
+
+4. Ubah nama file **`.env.example`** menjadi **`.env`**
+
+5. Generate kunci aplikasi:
    ```bash
    php artisan key:generate
    ```  
-5. Ubah nama file **`.env.example`** menjadi **`.env`**
 
 6. Atur konfigurasi database di file **`.env`** sesuai kebutuhan Anda:  
    ```env
