@@ -31,8 +31,11 @@ Ikuti langkah-langkah berikut untuk menjalankan aplikasi frontend:
 3. Jalankan aplikasi frontend:  
    ```bash
    npm run dev
-   ```  
-
+   ```
+4. Untuk semua dokumentasi library dan component yang diinstall terdapat di
+   ```text
+   package.json
+   ```
 ### **2. Backend (Laravel)**  
 Langkah-langkah untuk mengatur backend menggunakan Laravel:  
 1. Navigasikan ke folder **`godongbackend`**:  
